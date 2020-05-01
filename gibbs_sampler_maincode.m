@@ -4,7 +4,7 @@ clear all
 clc
 close all
 for ni=1:10
-Tbig=200;
+Tbig=600;
 theta_org=zeros(1,200);
 delta_org=zeros(1,200);
 y_org=zeros(1,200);
@@ -22,9 +22,9 @@ par.error.mu=0;
 par.error.sigma=sqrt(par.error.var);
 
 par.covariate.mean=5;
-par.covariate.var=0.1;
+par.covariate.var=0.3;
 par.covariate.sigma=sqrt(par.covariate.var);
-par.XB=normrnd(0,10,[1 Tbig]);
+par.XB=100+normrnd(0,10,[1 Tbig]);
 
 
 theta_org(1,1)=normrnd(par.W_theta.mu,par.W_theta.sigma);
@@ -47,10 +47,11 @@ V=100;
 W1=50;
 W2=2;
 W3=2;
-nsimu=5000;
-W=[W1 0;
-    0 W2];
-[gibbs]=gibbs_sampler_2ndorder(y_org,V,W,nsimu);
+nsimu=7000;
+W=[W1 0 0;
+    0 W2 0
+    0 0 W3];
+[gibbs]=gibbs_sampler_2ndorder_withcovariates(y_org,V,W,nsimu,par);
 figure;
 subplot(221)
 plot(gibbs.V)
@@ -71,6 +72,9 @@ plot(y_org,'o','MarkerEdgeColor',[0.4940, 0.1840, 0.5560],'MarkerSize',2);
 hold on
 plot(theta_org,'Color',[0.8500, 0.3250, 0.0980],'LineWidth',1.5,'LineStyle','--')
 legend('Var-Trend','Trend mean','Org measurement','Trend-org');
+
+% figure;
+
 
 break
 else 
