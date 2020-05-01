@@ -43,27 +43,19 @@ prompt='Do you want to continue, press 1 to continue or zero to break';
 user_ip = input(prompt);
 
 if (user_ip==1)
-data=xlsread('Book1.xlsx');
-y_org=log(data(:,1)');
-V=0.1;
-Wmat.Wtrend=0.002;
-Wmat.Wdelta=0.0002;
-Wmat.Wseas=0.0002;
-Wmat.Wreg=1;
-nsimu=40000;
+V=100;
+W1=50;
+W2=2;
+W3=2;
+nsimu=7000;
 timeperiod=12;
 maxterms=6;
-[G,F,W]=cons_mat(timeperiod,maxterms,2,Wmat);
-% W=[W1 0 0;
-%     0 W2 0
-%     0 0 W3
-%     ];
-sysmat.G=G;
-sysmat.W=W;
-sysmat.F=F;
-sysmat.V=V;
-
-[gibbs]=gibbs_sampler_2ndorder_withcovariates(y_org,nsimu,par,sysmat);
+[G]=cons_mat(timeperiod);
+W=[W1 0 0;
+    0 W2 0
+    0 0 W3
+    ];
+[gibbs]=gibbs_sampler_2ndorder_withcovariates(y_org,V,W,nsimu,par);
 figure;
 subplot(221)
 plot(gibbs.V)
@@ -81,9 +73,9 @@ figure;
 boundedline(1:length(gibbs.theta1mean),gibbs.theta1mean,gibbs.theta1var,'alpha')
 hold on
 plot(y_org,'o','MarkerEdgeColor',[0.4940, 0.1840, 0.5560],'MarkerSize',2);
-% hold on
-% plot(theta_org,'Color',[0.8500, 0.3250, 0.0980],'LineWidth',1.5,'LineStyle','--')
-legend('Var-Trend','Trend mean','Org measurement');
+hold on
+plot(theta_org,'Color',[0.8500, 0.3250, 0.0980],'LineWidth',1.5,'LineStyle','--')
+legend('Var-Trend','Trend mean','Org measurement','Trend-org');
 
 % figure;
 

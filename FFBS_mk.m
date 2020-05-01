@@ -10,11 +10,9 @@ lsim=length(z);
 no_measurements=size(z,1);
 
 %Kalman filter
-F=[1 0 cov_X(1,1)];
-a0=[0;0;0];
-R0=[10^10 0 0;
-    0 10^2 0
-    0 0 10^2];
+% F=[1 0 cov_X(1,1)];
+a0=zeros(length(G),1);
+R0=diag(10^3*ones(length(G),1));
 f0=F*a0;
 Q0=F*R0*F'+V;
 A0=R0*F'*pinv(Q0);
@@ -22,14 +20,14 @@ e0=z(1,1)-f0;
 C0=R0-A0*A0'*e0;
 m0=a0+A0*e0;
 
-C=zeros(3,3,lsim);
-m=zeros(3,lsim);
+C=zeros(length(G),length(G),lsim);
+m=zeros(length(G),lsim);
 
 m(:,1)=m0;
 C(:,:,1)=C0;
 
 for it = 2:lsim
-    F=[1 0 cov_X(1,it)];
+%     F=[1 0 cov_X(1,it)];
     a=G*m(:,it-1);
     R=G*C(:,:,it-1)*G'+W;
     f=F*a;
@@ -49,7 +47,7 @@ end
 % refresh(fig);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Kalman smooth - Rauch?ung?triebel
-theta=zeros(3,lsim);
+theta=zeros(length(G),lsim);
 C(:,:,lsim) = (C(:,:,lsim) +C(:,:,lsim).') / 2;
 theta(:,lsim)=mvnrnd(m(:,lsim),C(:,:,lsim));
 for it = lsim-1:-1:1

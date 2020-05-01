@@ -37,7 +37,7 @@ for ng=1:nsimu
     wt1=theta(1,2:Tbig)-theta(1,1:Tbig-1)-theta(2,1:Tbig-1);
     wt2=theta(2,2:Tbig)-theta(2,1:Tbig-1);
     wt3_dm=[];
-    for dt=1:length(G)-2
+    for dt=length(G)-2
         wt3_dm=[wt3_dm;theta(dt+2,2:Tbig)-theta(dt+2,1:Tbig-1)];
     end
     wt3=mean(wt3_dm,1);
@@ -59,12 +59,12 @@ for ng=1:nsimu
     gibbs.theta10(ng,:)=theta(10,:);
     gibbs.theta11(ng,:)=theta(11,:);
     gibbs.theta12(ng,:)=theta(12,:);
-    gibbs.theta13(ng,:)=theta(13,:);
+    gibbs.theta12(ng,:)=theta(12,:);
     
     
     W_dm(1,1)=gibbs.W_theta(ng,1);
-    W_dm(2,2)= gibbs.W_delta(ng,1);
-    W_dm(3:length(G),3:length(G))= diag(gibbs.W_seas(ng,1)*ones(length(G)-2,1));
+      W_dm(2,2)= gibbs.W_delta(ng,1);
+      W_dm(3:length(G),3:length(G))= diag(gibbs.W_seas(ng,1)*ones(length(G)-2,1));
      
   
     
@@ -77,17 +77,6 @@ gibbs.theta2mean=mean(gibbs.theta2(burnin:end,:),1);
 gibbs.theta2var=var(gibbs.theta2(burnin:end,:),1);
 gibbs.theta3mean=mean(gibbs.theta3(burnin:end,:),1);
 gibbs.theta3var=var(gibbs.theta3(burnin:end,:),1);
-gibbs.theta5mean=mean(gibbs.theta5(burnin:end,:),1);
-gibbs.theta5var=var(gibbs.theta5(burnin:end,:),1);
-gibbs.theta7mean=mean(gibbs.theta7(burnin:end,:),1);
-gibbs.theta7var=var(gibbs.theta7(burnin:end,:),1);
-gibbs.theta9mean=mean(gibbs.theta9(burnin:end,:),1);
-gibbs.theta9var=var(gibbs.theta9(burnin:end,:),1);
-gibbs.theta11mean=mean(gibbs.theta11(burnin:end,:),1);
-gibbs.theta11var=var(gibbs.theta11(burnin:end,:),1);
-gibbs.theta13mean=mean(gibbs.theta13(burnin:end,:),1);
-gibbs.theta13var=var(gibbs.theta13(burnin:end,:),1);
-
 % figure;
 % plot(1:Tbig,y_org);
 % hold on
